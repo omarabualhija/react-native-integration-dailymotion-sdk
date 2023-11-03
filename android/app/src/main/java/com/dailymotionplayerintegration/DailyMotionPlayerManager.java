@@ -23,9 +23,6 @@ class DailyMotionPlayerManager extends SimpleViewManager<FrameLayout> {
 
     @Override
     protected FrameLayout createViewInstance(@NonNull ThemedReactContext reactContext) {
-//        LayoutInflater inflater = (LayoutInflater) reactContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        inflater.inflate(R.layout.activity_main,null);
-
         return new DailyMotionPlayerView(reactContext);
     }
 

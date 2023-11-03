@@ -1,13 +1,9 @@
 package com.dailymotionplayerintegration
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 import com.dailymotion.player.android.sdk.Dailymotion
 import com.dailymotion.player.android.sdk.PlayerView
@@ -16,30 +12,18 @@ import com.dailymotion.player.android.sdk.webview.error.PlayerError
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.ThemedReactContext
 
-
 class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!!) {
 
-
-    private val playerId = "xioux"
-    private val videoId = "x8p17gw"
-    private var dmPlayer: PlayerView? =null
+    private var playerId: String = ""
+    private var videoId: String = ""
+    private var dmPlayer: PlayerView? = null
 
     private fun getReactContext(): ReactContext? {
         return context as ReactContext
     }
 
     init {
-
-        inflate(getReactContext(), R.layout.activity_main, this);
-
-
-
-
-        //This can be viewed in Android Studio's Log Cat.
-        Log.d("Inflated XML", "ANDROID_SAMPLE_UI");
-
-        loadThePlayer();
-
+        inflate(getReactContext(), R.layout.activity_main, this)
     }
 
     override fun requestLayout() {
@@ -52,67 +36,85 @@ class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!
     }
 
     private val measureAndLayout = Runnable {
-        measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+        measure(
+                MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        )
         this.layout(left, top, right, bottom)
     }
 
     private fun loadThePlayer(): Any {
         val currentActivity = getReactContext()?.currentActivity
 
-
-        if(currentActivity!=null){
+        if (currentActivity != null) {
 
             // Create and configure the Dailymotion PlayerView
             val playerView = PlayerView(getReactContext()!!)
 
-
             val playerContainerView = findViewById<View>(R.id.playerContainerView) as FrameLayout
 
-            if(playerContainerView.layoutParams != null) {
-                playerView.layoutParams = playerContainerView.layoutParams;
-                Log.d("--DailymotionPlayer--", "Height ${playerContainerView.height}");
-            }else {
-                Log.e("--DailymotionPlayer--", "No... ${playerContainerView}");
+            if (playerContainerView.layoutParams != null) {
+                playerView.layoutParams = playerContainerView.layoutParams
+            } else {
+                Log.e("--DailymotionPlayer--", "No playerContainerView found")
             }
 
-
-           return createDailymotionPlayer(context, playerId=playerId, videoId=videoId, playerContainerView=playerContainerView)
+            return createDailymotionPlayer(
+                    context,
+                    playerId = playerId!!,
+                    playerContainerView = playerContainerView
+            )
         }
-        Log.e("--DailymotionPlayer--", "Container null");
+        Log.e("--DailymotionPlayer--", "Container null")
 
         return View(context) as PlayerView
     }
 
-    fun createDailymotionPlayer(context: Context, playerId: String, videoId: String, playerContainerView: FrameLayout) {
+    fun createDailymotionPlayer(
+            context: Context,
+            playerId: String,
+            playerContainerView: FrameLayout
+    ) {
+
+        Log.d("--DailymotionPlayer--", "createDailymotionPlayer")
+
         Dailymotion.createPlayer(
                 context,
                 playerId = playerId,
-                videoId = videoId,
-                playerSetupListener = object : Dailymotion.PlayerSetupListener {
+                playerSetupListener =
+                object : Dailymotion.PlayerSetupListener {
                     override fun onPlayerSetupFailed(error: PlayerError) {
-                        Log.e("--DailymotionPlayer--", "Error while creating Dailymotion player: ${error.message}")
+                        Log.e(
+                                "--DailymotionPlayer--",
+                                "Error while creating Dailymotion player: ${error.message}"
+                        )
                     }
 
                     override fun onPlayerSetupSuccess(player: PlayerView) {
-                        val lp = LayoutParams(
-                                LayoutParams.MATCH_PARENT,
-                                LayoutParams.MATCH_PARENT
+                        val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+                        dmPlayer = player
+                        playerContainerView.addView(dmPlayer, lp)
+
+
+                        Log.d(
+                                "--DailymotionPlayer--",
+                                "Added Dailymotion player ${dmPlayer} to view hierarchy"
                         )
-                        player.loadContent(videoId)
-                        playerContainerView.addView(player, lp)
-                        dmPlayer= player
-                        Log.d("--DailymotionPlayer--", "Added Dailymotion player ${player} to view hierarchy")
+                        runTheVideo()
                     }
                 },
-                playerListener = object : PlayerListener {
+                playerListener =
+                object : PlayerListener {
                     override fun onFullscreenRequested(playerDialogFragment: DialogFragment) {
                         super.onFullscreenRequested(playerDialogFragment)
                         Log.d("--DailymotionPlayer--", "Enter fullscreen")
 
                         playerContainerView.layoutParams.height = LayoutParams.MATCH_PARENT
                         playerContainerView.layoutParams.width = LayoutParams.MATCH_PARENT
-                        // You might need to handle this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
+
+
+                        // You might need to handle
+                        // this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
                     }
 
                     override fun onFullscreenExit(playerView: PlayerView) {
@@ -121,10 +123,26 @@ class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!
 
                         playerContainerView.layoutParams.height = LayoutParams.MATCH_PARENT
                         playerContainerView.layoutParams.width = LayoutParams.MATCH_PARENT
-                        // You might need to handle this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
+                        // You might need to handle
+                        // this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
                     }
                 }
         )
     }
 
+    fun setVideoId(videoId: String) {
+        this.videoId = videoId
+        Log.d("--DailymotionPlayer--", "Set video id ${this.videoId}")
+    }
+
+
+    fun setPlayerId(playerId: String) {
+        this.playerId = playerId
+        Log.d("--DailymotionPlayer--", "Set player id ${this.playerId}")
+        loadThePlayer()
+    }
+
+    fun runTheVideo() {
+        dmPlayer!!.loadContent(videoId=videoId)
+    }
 }

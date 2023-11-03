@@ -7,15 +7,10 @@
  */
 
 import React from 'react';
-import {SafeAreaView, StatusBar, useColorScheme, View} from 'react-native';
-
-// const DmPlayer = Platform.select({
-//   ios: View,
-//   android: requireNativeComponent('DailyMotionPlayerView'),
-// });
+import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import DmComponent from './DmComponent';
+import DailyMotionPlayer from './DailyMotionPlayer';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -29,13 +24,19 @@ function App(): JSX.Element {
       style={{
         display: 'flex',
         height: '100%',
-        // backgroundColor: 'yellow',
       }}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <DmComponent />
+      <DailyMotionPlayer
+        playerId="x9uwg"
+        videoId="x8pbfnm"
+        style={{
+          height: 300,
+          backgroundColor: 'black',
+        }}
+      />
     </SafeAreaView>
   );
 }

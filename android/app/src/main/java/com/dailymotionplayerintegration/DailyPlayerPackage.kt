@@ -17,5 +17,5 @@ class DailyPlayerPackage: ReactPackage {
 
     override fun createNativeModules(
             reactContext: ReactApplicationContext
-    ): MutableList<NativeModule> = listOf(DmPlayerModule(reactContext)).toMutableList()
+    ): MutableList<NativeModule> = ArrayList()
 }

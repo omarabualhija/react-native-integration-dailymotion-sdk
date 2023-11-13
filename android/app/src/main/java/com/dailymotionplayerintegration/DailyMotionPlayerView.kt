@@ -107,25 +107,9 @@ class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!
                 object : PlayerListener {
                     override fun onFullscreenRequested(playerDialogFragment: DialogFragment) {
                         super.onFullscreenRequested(playerDialogFragment)
-                        Log.d("--DailymotionPlayer--", "Enter fullscreen")
-
-                        playerContainerView.layoutParams.height = LayoutParams.MATCH_PARENT
-                        playerContainerView.layoutParams.width = LayoutParams.MATCH_PARENT
-
-
-                        // You might need to handle
-                        // this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
+                        playerDialogFragment.show(MainActivity.mSupportFragmentManager, "dmPlayerFullscreenFragment")
                     }
 
-                    override fun onFullscreenExit(playerView: PlayerView) {
-                        super.onFullscreenExit(playerView)
-                        Log.d("--DailymotionPlayer--", "Exit fullscreen")
-
-                        playerContainerView.layoutParams.height = LayoutParams.MATCH_PARENT
-                        playerContainerView.layoutParams.width = LayoutParams.MATCH_PARENT
-                        // You might need to handle
-                        // this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
-                    }
                 }
         )
     }

@@ -1,9 +1,11 @@
 package com.dailymotionplayerintegration;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -12,6 +14,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
 public class MainActivity extends ReactActivity {
+
+  public static FragmentManager mSupportFragmentManager = null;
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
@@ -39,6 +43,8 @@ public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mSupportFragmentManager = getSupportFragmentManager();
+
     //setContentView(R.layout.activity_main);
   }
 

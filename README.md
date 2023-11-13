@@ -3,8 +3,11 @@
 ## Adding Dependencies and Repository Configuration
 
 1. Open settings.gradle
+
    Open the `settings.gradle` file in the root of your React Native project.
+
 2. Add Dependency Resolution Management
+
    Add the following code at the top of your `settings.gradle` file:
 
    ```gradle
@@ -24,8 +27,11 @@
    ```
 
 3. Open build.gradle (app)
+
    Open the `build.gradle` file in the app directory of your React Native project.
+
 4. Add DailyMotion SDK Dependencies
+
    Add the following lines to the dependencies section of your `build.gradle` file:
 
    ```gradle
@@ -43,6 +49,7 @@
    ```
 
 5. Explanation
+
    In the added code, we configured the dependency resolution management in `settings.gradle` to include the DailyMotion Maven repository. This allows your project to resolve dependencies from the specified Maven repository.
 
    In the `build.gradle` file, we added the DailyMotion SDK dependencies to the `implementation` section. This includes the main SDK (`com.dailymotion.player.android:sdk:1.0.6`) and the ads module (`com.dailymotion.player.android:ads:1.0.6`).

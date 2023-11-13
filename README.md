@@ -1,10 +1,53 @@
 # Dailymotion Android SDK Integration with React Native
 
-<!-- Untuk melakukan integrasi Dailymotion Android Player SDK. Ada beberapa hal yang harus dilakukan, seperti:
+## Adding Dependencies and Repository Configuration
 
-- Membuat custom class menggunakan file Java/Kotlin.
-- Membuat `DailyMotionPlayerManager.java`
-- more... -->
+1. Open settings.gradle
+   Open the `settings.gradle` file in the root of your React Native project.
+2. Add Dependency Resolution Management
+   Add the following code at the top of your `settings.gradle` file:
+
+   ```gradle
+   dependencyResolutionManagement {
+       repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+       repositories {
+           google()
+           mavenCentral()
+           maven {
+               name = "DailymotionMavenRelease"
+               url = "https://mvn.dailymotion.com/repository/releases/"
+           }
+       }
+   }
+
+   // ... (other existing code)
+   ```
+
+3. Open build.gradle (app)
+   Open the `build.gradle` file in the app directory of your React Native project.
+4. Add DailyMotion SDK Dependencies
+   Add the following lines to the dependencies section of your `build.gradle` file:
+
+   ```gradle
+   android {
+    // ... (other existing code)
+
+    dependencies {
+        // ... (other existing dependencies)
+
+        implementation 'com.dailymotion.player.android:sdk:1.0.6'
+        implementation 'com.dailymotion.player.android:ads:1.0.6'
+    }
+   }
+
+   ```
+
+5. Explanation
+   In the added code, we configured the dependency resolution management in `settings.gradle` to include the DailyMotion Maven repository. This allows your project to resolve dependencies from the specified Maven repository.
+
+   In the `build.gradle` file, we added the DailyMotion SDK dependencies to the `implementation` section. This includes the main SDK (`com.dailymotion.player.android:sdk:1.0.6`) and the ads module (`com.dailymotion.player.android:ads:1.0.6`).
+
+   These steps are necessary for integrating the DailyMotion SDK into your React Native Android project.
 
 ## Registering the Package in MainApplication.java
 
@@ -33,6 +76,56 @@
     ```
 
     Ensure that you're using your actual package name in place of `yourpackage`. This registration allows React Native to access the functionality provided by your `DailyPlayerPackage`.
+
+## Adding FragmentManager in MainActivity
+
+1.  Open MainActivity.java
+
+    Open the `MainActivity.java` file in your React Native Android project.
+
+2.  Add FragmentManager Declaration
+
+    Add the following line at the top of your `MainActivity` class to declare `mSupportFragmentManager`:
+
+    ```java
+    public static FragmentManager mSupportFragmentManager = null;
+    ```
+
+    Your `MainActivity` class should look like this:
+
+    ```java
+    package com.yourapp;
+
+    import android.os.Bundle;
+    import com.facebook.react.ReactActivity;
+    import androidx.fragment.app.FragmentManager; // Make sure to import FragmentManager
+
+    public class MainActivity extends ReactActivity {
+
+    public static FragmentManager mSupportFragmentManager = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSupportFragmentManager = getSupportFragmentManager();
+
+        // setContentView(R.layout.activity_main); // Commented out for reference
+    }
+
+    // ... (other existing code)
+
+    }
+    ```
+
+3.  Save Changes
+
+    Save the changes to `MainActivity.java`.
+
+4.  Explanation
+
+    In the added code, we declare a `public static FragmentManager mSupportFragmentManager` variable in the `MainActivity` class. This variable is initialized in the `onCreate` method, allowing you to access the `FragmentManager` from other parts of your application.
+
+    This modification is necessary for enabling fullscreen capability in the DailyMotion SDK, as it relies on the `FragmentManager` provided by the hosting activity.
 
 ## Creating the Package
 
@@ -218,25 +311,9 @@ class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!
                 object : PlayerListener {
                     override fun onFullscreenRequested(playerDialogFragment: DialogFragment) {
                         super.onFullscreenRequested(playerDialogFragment)
-                        Log.d("--DailymotionPlayer--", "Enter fullscreen")
-
-                        playerContainerView.layoutParams.height = LayoutParams.MATCH_PARENT
-                        playerContainerView.layoutParams.width = LayoutParams.MATCH_PARENT
-
-
-                        // You might need to handle
-                        // this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
+                        playerDialogFragment.show(MainActivity.mSupportFragmentManager, "dmPlayerFullscreenFragment")
                     }
 
-                    override fun onFullscreenExit(playerView: PlayerView) {
-                        super.onFullscreenExit(playerView)
-                        Log.d("--DailymotionPlayer--", "Exit fullscreen")
-
-                        playerContainerView.layoutParams.height = LayoutParams.MATCH_PARENT
-                        playerContainerView.layoutParams.width = LayoutParams.MATCH_PARENT
-                        // You might need to handle
-                        // this@YourClass.dmPlayer?.notifyFullscreenChanged() here.
-                    }
                 }
         )
     }

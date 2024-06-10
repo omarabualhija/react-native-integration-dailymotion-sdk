@@ -41,8 +41,8 @@
     dependencies {
         // ... (other existing dependencies)
 
-        implementation 'com.dailymotion.player.android:sdk:1.0.6'
-        implementation 'com.dailymotion.player.android:ads:1.0.6'
+        implementation 'com.dailymotion.player.android:sdk:1.2.0'
+        implementation 'com.dailymotion.player.android:ads:1.2.0'
     }
    }
 
@@ -63,7 +63,7 @@
     At the top of the MainApplication.java file, import the necessary classes.
 
     ```java
-    import com.yourpackage.DailyPlayerPackage;
+    import com.yourpackage.DailymotionPlayer.DailymotionPlayerViewFactory;
     // Replace 'yourpackage' with your actual package name
     ```
 
@@ -76,13 +76,13 @@
       @SuppressWarnings("UnnecessaryLocalVariable")
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here, for example:
-      packages.add(new DailyPlayerPackage());
+      packages.add(new DailymotionPlayerViewFactory());
       return packages;
     }
 
     ```
 
-    Ensure that you're using your actual package name in place of `yourpackage`. This registration allows React Native to access the functionality provided by your `DailyPlayerPackage`.
+    Ensure that you're using your actual package name in place of `yourpackage`. This registration allows React Native to access the functionality provided by your `DailymotionPlayerViewFactory`.
 
 ## Adding FragmentManager in MainActivity
 
@@ -139,7 +139,7 @@
 navigate to the `android/app/src/main/java/com/yourAppName` directory. Inside this directory, create a class called `DailyPlayerPackage.kt`
 
 ```kt
-package com.dailymotionplayerintegration
+package com.dailymotionplayerintegration.DailymotionPlayer
 
 
 import android.view.View
@@ -149,67 +149,64 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ReactShadowNode
 import com.facebook.react.uimanager.ViewManager
 
-class DailyPlayerPackage: ReactPackage {
+class DailymotionPlayerViewFactory: ReactPackage {
     override fun createViewManagers(reactContext: ReactApplicationContext): MutableList<ViewManager<out View, out ReactShadowNode<*>>> {
         return mutableListOf(
-                DailyMotionPlayerManager()
+            DailymotionPlayerController()
         )
     }
 
     override fun createNativeModules(
-            reactContext: ReactApplicationContext
+        reactContext: ReactApplicationContext
     ): MutableList<NativeModule> = ArrayList()
 }
 ```
 
-after that, create class called `DailyMotionPlayerManager.java`:
+after that, create class called `DailymotionPlayerController.java`:
 
 ```java
-package com.dailymotionplayerintegration;
+package com.dailymotionplayerintegration.DailymotionPlayer;
 
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-class DailyMotionPlayerManager extends SimpleViewManager<FrameLayout> {
+class DailymotionPlayerController extends SimpleViewManager<FrameLayout> {
 
 
     @NonNull
     @Override
     public String getName() {
-        return "DailyMotionPlayerView";
+        return "DailymotionPlayerNative";
     }
 
     @Override
     protected FrameLayout createViewInstance(@NonNull ThemedReactContext reactContext) {
-        return new DailyMotionPlayerView(reactContext);
+        return new DailymotionPlayerNativeView(reactContext);
     }
 
     @ReactProp(name = "videoId")
-    public void setPropVideoId(DailyMotionPlayerView view, @Nullable String param) {
+    public void setPropVideoId(DailymotionPlayerNativeView view, @Nullable String param) {
         view.setVideoId(param);
     }
 
     @ReactProp(name = "playerId")
-    public void setPlayerId(DailyMotionPlayerView view, @Nullable String param) {
+    public void setPlayerId(DailymotionPlayerNativeView view, @Nullable String param) {
         view.setPlayerId(param);
     }
 }
 
+
 ```
 
-The last file that we need to create is `DailyMotionPlayerView.kt`:
+The last file that we need to create is `DailymotionPlayerNativeView.kt`:
 
 ```kt
-package com.dailymotionplayerintegration
+package com.dailymotionplayerintegration.DailymotionPlayer
 
 import android.content.Context
 import android.util.Log
@@ -220,10 +217,12 @@ import com.dailymotion.player.android.sdk.Dailymotion
 import com.dailymotion.player.android.sdk.PlayerView
 import com.dailymotion.player.android.sdk.listeners.PlayerListener
 import com.dailymotion.player.android.sdk.webview.error.PlayerError
+import com.dailymotionplayerintegration.MainActivity
+import com.dailymotionplayerintegration.R
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.ThemedReactContext
 
-class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!!) {
+class DailymotionPlayerNativeView(context: ThemedReactContext?) : FrameLayout(context!!) {
 
     private var playerId: String = ""
     private var videoId: String = ""
@@ -342,6 +341,7 @@ class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!
     }
 }
 
+
 ```
 
 ## Using DailyMotionPlayer Package in React Native
@@ -355,7 +355,7 @@ const DailyMotionPlayer: HostComponent<{
   videoId: string;
   playerId: string;
   style?: ViewStyle;
-}> = requireNativeComponent('DailyMotionPlayerView');
+}> = requireNativeComponent('DailymotionPlayerNative');
 
 export default DailyMotionPlayer;
 ```

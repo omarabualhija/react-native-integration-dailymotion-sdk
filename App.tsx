@@ -7,7 +7,14 @@
  */
 
 import React from 'react';
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+  useColorScheme,
+} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import DailyMotionPlayer from './DailyMotionPlayer';
@@ -29,14 +36,64 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <DailyMotionPlayer
-        playerId="x9uwg"
-        videoId="x8pbfnm"
-        style={{
-          height: 300,
-          backgroundColor: 'black',
-        }}
-      />
+      <ScrollView>
+        <View style={{paddingVertical: 10}}>
+          <Text>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+            obcaecati totam quas enim et distinctio earum temporibus, aliquam
+            expedita commodi necessitatibus! Molestias possimus fuga unde
+            placeat culpa numquam totam perferendis!
+          </Text>
+        </View>
+        <View style={{paddingVertical: 10}}>
+          <Text>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+            obcaecati totam quas enim et distinctio earum temporibus, aliquam
+            expedita commodi necessitatibus! Molestias possimus fuga unde
+            placeat culpa numquam totam perferendis!
+          </Text>
+        </View>
+        <View style={{paddingVertical: 10}}>
+          <Text>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+            obcaecati totam quas enim et distinctio earum temporibus, aliquam
+            expedita commodi necessitatibus! Molestias possimus fuga unde
+            placeat culpa numquam totam perferendis!
+          </Text>
+        </View>
+        <DailyMotionPlayer
+          playerId="x9uwg"
+          videoId="x8pbfnm"
+          style={{
+            height: 300,
+            backgroundColor: 'black',
+          }}
+        />
+        <View style={{paddingVertical: 10}}>
+          <Text>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+            obcaecati totam quas enim et distinctio earum temporibus, aliquam
+            expedita commodi necessitatibus! Molestias possimus fuga unde
+            placeat culpa numquam totam perferendis!
+          </Text>
+        </View>
+        <View style={{paddingVertical: 10}}>
+          <Text>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+            obcaecati totam quas enim et distinctio earum temporibus, aliquam
+            expedita commodi necessitatibus! Molestias possimus fuga unde
+            placeat culpa numquam totam perferendis!
+          </Text>
+        </View>
+        <View style={{paddingVertical: 10}}>
+          <Text>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+            obcaecati totam quas enim et distinctio earum temporibus, aliquam
+            expedita commodi necessitatibus! Molestias possimus fuga unde
+            placeat culpa numquam totam perferendis!
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

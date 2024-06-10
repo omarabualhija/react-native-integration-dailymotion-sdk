@@ -4,6 +4,6 @@ const DailyMotionPlayer: HostComponent<{
   videoId: string;
   playerId: string;
   style?: ViewStyle;
-}> = requireNativeComponent('DailyMotionPlayerView');
+}> = requireNativeComponent('DailymotionPlayerNative');
 
 export default DailyMotionPlayer;

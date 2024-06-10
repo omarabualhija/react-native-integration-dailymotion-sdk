@@ -1,4 +1,4 @@
-package com.dailymotionplayerintegration
+package com.dailymotionplayerintegration.DailymotionPlayer
 
 import android.content.Context
 import android.util.Log
@@ -9,10 +9,12 @@ import com.dailymotion.player.android.sdk.Dailymotion
 import com.dailymotion.player.android.sdk.PlayerView
 import com.dailymotion.player.android.sdk.listeners.PlayerListener
 import com.dailymotion.player.android.sdk.webview.error.PlayerError
+import com.dailymotionplayerintegration.MainActivity
+import com.dailymotionplayerintegration.R
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.ThemedReactContext
 
-class DailyMotionPlayerView(context: ThemedReactContext?) : FrameLayout(context!!) {
+class DailymotionPlayerNativeView(context: ThemedReactContext?) : FrameLayout(context!!) {
 
     private var playerId: String = ""
     private var videoId: String = ""

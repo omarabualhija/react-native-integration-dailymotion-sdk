@@ -1,38 +1,34 @@
-package com.dailymotionplayerintegration;
+package com.dailymotionplayerintegration.DailymotionPlayer;
 
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-class DailyMotionPlayerManager extends SimpleViewManager<FrameLayout> {
+class DailymotionPlayerController extends SimpleViewManager<FrameLayout> {
 
 
     @NonNull
     @Override
     public String getName() {
-        return "DailyMotionPlayerView";
+        return "DailymotionPlayerNative";
     }
 
     @Override
     protected FrameLayout createViewInstance(@NonNull ThemedReactContext reactContext) {
-        return new DailyMotionPlayerView(reactContext);
+        return new DailymotionPlayerNativeView(reactContext);
     }
 
     @ReactProp(name = "videoId")
-    public void setPropVideoId(DailyMotionPlayerView view, @Nullable String param) {
+    public void setPropVideoId(DailymotionPlayerNativeView view, @Nullable String param) {
         view.setVideoId(param);
     }
 
     @ReactProp(name = "playerId")
-    public void setPlayerId(DailyMotionPlayerView view, @Nullable String param) {
+    public void setPlayerId(DailymotionPlayerNativeView view, @Nullable String param) {
         view.setPlayerId(param);
     }
 }

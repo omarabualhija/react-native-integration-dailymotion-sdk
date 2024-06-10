@@ -1,6 +1,8 @@
 package com.dailymotionplayerintegration;
 
 import android.app.Application;
+
+import com.dailymotionplayerintegration.DailymotionPlayer.DailymotionPlayerViewFactory;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -24,7 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-           packages.add(new DailyPlayerPackage());
+           packages.add(new DailymotionPlayerViewFactory());
           return packages;
         }
 

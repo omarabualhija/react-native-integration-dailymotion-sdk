@@ -1,79 +1,374 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Dailymotion Android SDK Integration with React Native
 
-# Getting Started
+## Adding Dependencies and Repository Configuration
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+1. Open settings.gradle
 
-## Step 1: Start the Metro Server
+   Open the `settings.gradle` file in the root of your React Native project.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+2. Add Dependency Resolution Management
 
-To start Metro, run the following command from the _root_ of your React Native project:
+   Add the following code at the top of your `settings.gradle` file:
 
-```bash
-# using npm
-npm start
+   ```gradle
+   dependencyResolutionManagement {
+       repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+       repositories {
+           google()
+           mavenCentral()
+           maven {
+               name = "DailymotionMavenRelease"
+               url = "https://mvn.dailymotion.com/repository/releases/"
+           }
+       }
+   }
 
-# OR using Yarn
-yarn start
+   // ... (other existing code)
+   ```
+
+3. Open build.gradle (app)
+
+   Open the `build.gradle` file in the app directory of your React Native project.
+
+4. Add DailyMotion SDK Dependencies
+
+   Add the following lines to the dependencies section of your `build.gradle` file:
+
+   ```gradle
+   android {
+    // ... (other existing code)
+
+    dependencies {
+        // ... (other existing dependencies)
+
+        implementation 'com.dailymotion.player.android:sdk:1.2.0'
+        implementation 'com.dailymotion.player.android:ads:1.2.0'
+    }
+   }
+
+   ```
+
+5. Explanation
+
+   In the added code, we configured the dependency resolution management in `settings.gradle` to include the DailyMotion Maven repository. This allows your project to resolve dependencies from the specified Maven repository.
+
+   In the `build.gradle` file, we added the DailyMotion SDK dependencies to the `implementation` section. This includes the main SDK (`com.dailymotion.player.android:sdk:1.0.6`) and the ads module (`com.dailymotion.player.android:ads:1.0.6`).
+
+   These steps are necessary for integrating the DailyMotion SDK into your React Native Android project.
+
+## Registering the Package in MainApplication.java
+
+1.  **Locate MainApplication.java:** In your React Native project, navigate to the `android/app/src/main/java/com/yourAppName` directory. Inside this directory, you'll find the `MainApplication.java` file.
+2.  **Add Import Statements:**
+    At the top of the MainApplication.java file, import the necessary classes.
+
+    ```java
+    import com.yourpackage.DailymotionPlayer.DailymotionPlayerViewFactory;
+    // Replace 'yourpackage' with your actual package name
+    ```
+
+3.  Register the package
+    Inside the `getPackages()` method in `MainApplication.java`, add an instance of your package to the list of packages.
+
+    ```java
+    @Override
+    protected List<ReactPackage> getPackages() {
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // Packages that cannot be autolinked yet can be added manually here, for example:
+      packages.add(new DailymotionPlayerViewFactory());
+      return packages;
+    }
+
+    ```
+
+    Ensure that you're using your actual package name in place of `yourpackage`. This registration allows React Native to access the functionality provided by your `DailymotionPlayerViewFactory`.
+
+## Adding FragmentManager in MainActivity
+
+1.  Open MainActivity.java
+
+    Open the `MainActivity.java` file in your React Native Android project.
+
+2.  Add FragmentManager Declaration
+
+    Add the following line at the top of your `MainActivity` class to declare `mSupportFragmentManager`:
+
+    ```java
+    public static FragmentManager mSupportFragmentManager = null;
+    ```
+
+    Your `MainActivity` class should look like this:
+
+    ```java
+    package com.yourapp;
+
+    import android.os.Bundle;
+    import com.facebook.react.ReactActivity;
+    import androidx.fragment.app.FragmentManager; // Make sure to import FragmentManager
+
+    public class MainActivity extends ReactActivity {
+
+    public static FragmentManager mSupportFragmentManager = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSupportFragmentManager = getSupportFragmentManager();
+
+        // setContentView(R.layout.activity_main); // Commented out for reference
+    }
+
+    // ... (other existing code)
+
+    }
+    ```
+
+3.  Save Changes
+
+    Save the changes to `MainActivity.java`.
+
+4.  Explanation
+
+    In the added code, we declare a `public static FragmentManager mSupportFragmentManager` variable in the `MainActivity` class. This variable is initialized in the `onCreate` method, allowing you to access the `FragmentManager` from other parts of your application.
+
+    This modification is necessary for enabling fullscreen capability in the DailyMotion SDK, as it relies on the `FragmentManager` provided by the hosting activity.
+
+## Creating the Package
+
+navigate to the `android/app/src/main/java/com/yourAppName` directory. Inside this directory, create a class called `DailyPlayerPackage.kt`
+
+```kt
+package com.dailymotionplayerintegration.DailymotionPlayer
+
+
+import android.view.View
+import com.facebook.react.ReactPackage
+import com.facebook.react.bridge.NativeModule
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.uimanager.ReactShadowNode
+import com.facebook.react.uimanager.ViewManager
+
+class DailymotionPlayerViewFactory: ReactPackage {
+    override fun createViewManagers(reactContext: ReactApplicationContext): MutableList<ViewManager<out View, out ReactShadowNode<*>>> {
+        return mutableListOf(
+            DailymotionPlayerController()
+        )
+    }
+
+    override fun createNativeModules(
+        reactContext: ReactApplicationContext
+    ): MutableList<NativeModule> = ArrayList()
+}
 ```
 
-## Step 2: Start your Application
+after that, create class called `DailymotionPlayerController.java`:
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+```java
+package com.dailymotionplayerintegration.DailymotionPlayer;
 
-### For Android
+import android.widget.FrameLayout;
 
-```bash
-# using npm
-npm run android
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.facebook.react.uimanager.SimpleViewManager;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.annotations.ReactProp;
 
-# OR using Yarn
-yarn android
+class DailymotionPlayerController extends SimpleViewManager<FrameLayout> {
+
+
+    @NonNull
+    @Override
+    public String getName() {
+        return "DailymotionPlayerNative";
+    }
+
+    @Override
+    protected FrameLayout createViewInstance(@NonNull ThemedReactContext reactContext) {
+        return new DailymotionPlayerNativeView(reactContext);
+    }
+
+    @ReactProp(name = "videoId")
+    public void setPropVideoId(DailymotionPlayerNativeView view, @Nullable String param) {
+        view.setVideoId(param);
+    }
+
+    @ReactProp(name = "playerId")
+    public void setPlayerId(DailymotionPlayerNativeView view, @Nullable String param) {
+        view.setPlayerId(param);
+    }
+}
+
+
 ```
 
-### For iOS
+The last file that we need to create is `DailymotionPlayerNativeView.kt`:
 
-```bash
-# using npm
-npm run ios
+```kt
+package com.dailymotionplayerintegration.DailymotionPlayer
 
-# OR using Yarn
-yarn ios
+import android.content.Context
+import android.util.Log
+import android.view.View
+import android.widget.FrameLayout
+import androidx.fragment.app.DialogFragment
+import com.dailymotion.player.android.sdk.Dailymotion
+import com.dailymotion.player.android.sdk.PlayerView
+import com.dailymotion.player.android.sdk.listeners.PlayerListener
+import com.dailymotion.player.android.sdk.webview.error.PlayerError
+import com.dailymotionplayerintegration.MainActivity
+import com.dailymotionplayerintegration.R
+import com.facebook.react.bridge.ReactContext
+import com.facebook.react.uimanager.ThemedReactContext
+
+class DailymotionPlayerNativeView(context: ThemedReactContext?) : FrameLayout(context!!) {
+
+    private var playerId: String = ""
+    private var videoId: String = ""
+    private var dmPlayer: PlayerView? = null
+
+    private fun getReactContext(): ReactContext? {
+        return context as ReactContext
+    }
+
+    init {
+        inflate(getReactContext(), R.layout.activity_main, this)
+    }
+
+    override fun requestLayout() {
+        super.requestLayout()
+
+        // This view relies on a measure + layout pass happening after it calls requestLayout().
+        // https://github.com/facebook/react-native/issues/4990#issuecomment-180415510
+        // https://stackoverflow.com/questions/39836356/react-native-resize-custom-ui-component
+        post(measureAndLayout)
+    }
+
+    private val measureAndLayout = Runnable {
+        measure(
+                MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        )
+        this.layout(left, top, right, bottom)
+    }
+
+    private fun loadThePlayer(): Any {
+        val currentActivity = getReactContext()?.currentActivity
+
+        if (currentActivity != null) {
+
+            // Create and configure the Dailymotion PlayerView
+            val playerView = PlayerView(getReactContext()!!)
+
+            val playerContainerView = findViewById<View>(R.id.playerContainerView) as FrameLayout
+
+            if (playerContainerView.layoutParams != null) {
+                playerView.layoutParams = playerContainerView.layoutParams
+            } else {
+                Log.e("--DailymotionPlayer--", "No playerContainerView found")
+            }
+
+            return createDailymotionPlayer(
+                    context,
+                    playerId = playerId!!,
+                    playerContainerView = playerContainerView
+            )
+        }
+        Log.e("--DailymotionPlayer--", "Container null")
+
+        return View(context) as PlayerView
+    }
+
+    fun createDailymotionPlayer(
+            context: Context,
+            playerId: String,
+            playerContainerView: FrameLayout
+    ) {
+
+        Log.d("--DailymotionPlayer--", "createDailymotionPlayer")
+
+        Dailymotion.createPlayer(
+                context,
+                playerId = playerId,
+                playerSetupListener =
+                object : Dailymotion.PlayerSetupListener {
+                    override fun onPlayerSetupFailed(error: PlayerError) {
+                        Log.e(
+                                "--DailymotionPlayer--",
+                                "Error while creating Dailymotion player: ${error.message}"
+                        )
+                    }
+
+                    override fun onPlayerSetupSuccess(player: PlayerView) {
+                        val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+                        dmPlayer = player
+                        playerContainerView.addView(dmPlayer, lp)
+
+
+                        Log.d(
+                                "--DailymotionPlayer--",
+                                "Added Dailymotion player ${dmPlayer} to view hierarchy"
+                        )
+                        runTheVideo()
+                    }
+                },
+                playerListener =
+                object : PlayerListener {
+                    override fun onFullscreenRequested(playerDialogFragment: DialogFragment) {
+                        super.onFullscreenRequested(playerDialogFragment)
+                        playerDialogFragment.show(MainActivity.mSupportFragmentManager, "dmPlayerFullscreenFragment")
+                    }
+
+                }
+        )
+    }
+
+    fun setVideoId(videoId: String) {
+        this.videoId = videoId
+        Log.d("--DailymotionPlayer--", "Set video id ${this.videoId}")
+    }
+
+
+    fun setPlayerId(playerId: String) {
+        this.playerId = playerId
+        Log.d("--DailymotionPlayer--", "Set player id ${this.playerId}")
+        loadThePlayer()
+    }
+
+    fun runTheVideo() {
+        dmPlayer!!.loadContent(videoId=videoId)
+    }
+}
+
+
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## Using DailyMotionPlayer Package in React Native
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+In your React Native code, import the Native Module using `requireNativeComponent` and use it in your component.
 
-## Step 3: Modifying your App
+```ts
+import {HostComponent, ViewStyle, requireNativeComponent} from 'react-native';
 
-Now that you have successfully run the app, let's modify it.
+const DailyMotionPlayer: HostComponent<{
+  videoId: string;
+  playerId: string;
+  style?: ViewStyle;
+}> = requireNativeComponent('DailymotionPlayerNative');
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+export default DailyMotionPlayer;
+```
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+in `App.tsx`, you can call the component
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```tsx
+<DailyMotionPlayer
+  playerId="x9uwg"
+  videoId="x8pbfnm"
+  style={{
+    height: 300,
+    backgroundColor: 'black',
+  }}
+/>
+```

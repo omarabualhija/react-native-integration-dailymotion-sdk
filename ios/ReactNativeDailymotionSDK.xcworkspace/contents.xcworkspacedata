@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ReactNativeDailymotionSDK.xcodeproj">
+      location = "group:/Users/arry/Project/Dailymotion/React-Native-Dailymotion-Sample/ios/ReactNativeDailymotionSDK.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

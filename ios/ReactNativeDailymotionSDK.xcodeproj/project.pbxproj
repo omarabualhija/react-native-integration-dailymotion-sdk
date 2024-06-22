@@ -16,7 +16,8 @@
 		6A6AEC1F2C1A8B6500F945A3 /* DailymotionPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AEC1E2C1A8B6500F945A3 /* DailymotionPlayerController.swift */; };
 		6A6D10F22C226AC200481DE8 /* DailymotionPlayerViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6D10F12C226AC200481DE8 /* DailymotionPlayerViewFactory.m */; };
 		6A6D10F52C24EA2400481DE8 /* DailymotionPlayerNativeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6D10F42C24EA2400481DE8 /* DailymotionPlayerNativeView.swift */; };
-		6AD8080D2C19B4050076824C /* DailymotionPlayerSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 6AD8080C2C19B4050076824C /* DailymotionPlayerSDK */; };
+		6AF05C512C27328900397C8B /* DailymotionPlayerSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 6AF05C502C27328900397C8B /* DailymotionPlayerSDK */; };
+		6AF05C542C2732F200397C8B /* DailymotionPlayerSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 6AF05C532C2732F200397C8B /* DailymotionPlayerSDK */; };
 		7699B88040F8A987B510C191 /* libPods-ReactNativeDailymotionSDK-ReactNativeDailymotionSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ReactNativeDailymotionSDK-ReactNativeDailymotionSDKTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CC6E3EE058D91B87B4D9F4AF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 966F6022E42CCF2BD39CD05F /* PrivacyInfo.xcprivacy */; };
@@ -72,7 +73,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AD8080D2C19B4050076824C /* DailymotionPlayerSDK in Frameworks */,
+				6AF05C542C2732F200397C8B /* DailymotionPlayerSDK in Frameworks */,
+				6AF05C512C27328900397C8B /* DailymotionPlayerSDK in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* libPods-ReactNativeDailymotionSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,7 +221,8 @@
 			);
 			name = ReactNativeDailymotionSDK;
 			packageProductDependencies = (
-				6AD8080C2C19B4050076824C /* DailymotionPlayerSDK */,
+				6AF05C502C27328900397C8B /* DailymotionPlayerSDK */,
+				6AF05C532C2732F200397C8B /* DailymotionPlayerSDK */,
 			);
 			productName = ReactNativeDailymotionSDK;
 			productReference = 13B07F961A680F5B00A75B9A /* ReactNativeDailymotionSDK.app */;
@@ -507,7 +510,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReactNativeDailymotionSDK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -535,7 +538,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = ReactNativeDailymotionSDK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -752,7 +755,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6AD8080C2C19B4050076824C /* DailymotionPlayerSDK */ = {
+		6AF05C502C27328900397C8B /* DailymotionPlayerSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DailymotionPlayerSDK;
+		};
+		6AF05C532C2732F200397C8B /* DailymotionPlayerSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6AD8080B2C19B4050076824C /* XCRemoteSwiftPackageReference "player-sdk-ios" */;
 			productName = DailymotionPlayerSDK;

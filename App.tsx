@@ -63,10 +63,10 @@ function App(): JSX.Element {
         </View>
         <DailyMotionPlayer
           playerId="x9uwg"
-          videoId="x8pbfnm"
+          videoId="x8zdyio"
           style={{
-            height: 300,
-            backgroundColor: 'black',
+            width: '100%',
+            height: 250,
           }}
         />
         <View style={{paddingVertical: 10}}>

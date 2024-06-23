@@ -12,30 +12,18 @@ class MainActivity : ReactActivity() {
 
     private var mSupportFragmentManager: FragmentManager? = null
 
-  /**
-   * Returns the name of the main component registered from JavaScript. This is used to schedule
-   * rendering of the component.
-   */
-  override fun getMainComponentName(): String = "ReactNativeDailymotionSDK"
 
-  /**
-   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
-   */
-  override fun createReactActivityDelegate(): ReactActivityDelegate =
+    override fun getMainComponentName(): String = "ReactNativeDailymotionSDK"
+
+
+    override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mSupportFragmentManager = supportFragmentManager
-
-        Log.d("--DailymotionPlayer--", mSupportFragmentManager.toString())
-
-        // setContentView(R.layout.activity_main)
     }
 
-    // Method to get the FragmentManager
     fun getSupportFragmentManagerInstance(): FragmentManager? {
         return mSupportFragmentManager
     }

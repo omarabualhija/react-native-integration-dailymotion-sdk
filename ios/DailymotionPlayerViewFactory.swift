@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-//import DailymotionPlayerSDK
 
 @objc(DailymotionPlayerNative)
 class DailymotionPlayerViewFactory: RCTViewManager {

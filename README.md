@@ -43,8 +43,8 @@
     dependencies {
         // ... (other existing dependencies)
 
-        implementation 'com.dailymotion.player.android:sdk:1.2.3'
-        implementation 'com.dailymotion.player.android:ads:1.2.3'
+        implementation 'com.dailymotion.player.android:sdk:1.2.4'
+        implementation 'com.dailymotion.player.android:ads:1.2.4'
     }
    }
 
